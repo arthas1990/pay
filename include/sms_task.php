@@ -43,5 +43,12 @@ if($_SESSION['other']['sms_wrong']==0 && $_SESSION['other']['sms_sended']==0)
 </div>
 <?php } 
 else{?>
-
+<div class="tbl">
+<form action="index.php">
+<input type="radio" name="type" value="sms" checked> ارسال کد امنیتی به موبایل<br>
+<input type="radio" name="type" value="mail" >  ارسال کد امنیتی به ایمیل<br>
+ <input  name="step"   type="hidden" value="sms">
+ <input value="ارســال کـــد امنیتی" type="submit" class="btn">
+</form>
+</div>
 <?php } ?>
