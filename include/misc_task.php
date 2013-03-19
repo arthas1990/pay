@@ -45,7 +45,7 @@
 							<tr   style="">
 								<td > مبلغ موردنظر </td>
 								<td>
-								<input placeholder="" name="price" id="price"   type="text">
+								<input placeholder="" name="price" id="price"  onchange="chk(this.value)";  type="text">
 								ریــال <label></label></td>
 							</tr>
 
@@ -60,11 +60,18 @@
 							</tr>
 							<tr   style="">
 								<td > روش پرداخت </td>
-								<td><?php if($Logged_User['credit']>0){?><script>if($('#price').val()<=<?=$Logged_User['credit']?>){$('#pay_type').append('<option value="charge">کسر از شارژ فعلی اکانت</option>'); }</script>	 <?php } ?>
+								<td> <script>
+								function chk(vr){
+								if(vr<=<?php echo $Logged_User['credit'];?>){
+									$('#pay_type').html('<option value="bank">پرداخت از طریق درگاه بانکی</option>	<option value="charge">کسر از شارژ فعلی اکانت</option>'); 
+								}else{
+									$('#pay_type').html('<option value="bank">پرداخت از طریق درگاه بانکی</option>'); 
+								}
+								}</script>
 								<select name="pay_type" id="pay_type">
+								
 								<option value="bank">پرداخت از طریق درگاه بانکی</option>
-								
-								
+								<option value="charge">کسر از شارژ فعلی اکانت</option>
 							
 								</select>
 								

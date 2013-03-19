@@ -14,14 +14,15 @@ if($_SESSION['other']['sms_wrong']==0 && $_SESSION['other']['sms_sended']==0)
 	<tr>
 		<td style="direction:rtl" >
 		<?php if($_REQUEST['type']=='sms'){?>
-			رمز ارسال شده به موبایلتان با دو شماره آخر 
-			 <?=substr($Logged_User['tell'],-2) ;?>
+			رمز ارسال شده به موبایلتان با شماره  
+			 <?=substr($Logged_User['tell'],-2).'*****'.substr($Logged_User['tell'],0,4) ;?>
 			 را وارد کنید : 
 		 <?php }else {?>
-			 رمز ارسال شده به ایمیلتان با سه کاراکتر آخر
+			 رمز ارسال شده به ایمیل 
 			 <?php
 			 $tmp=explode('@',$Logged_User['email']);
-			 echo substr($tmp[0],-3) ;?>
+			 if($tmp[0]<5)	$tmp[0]=substr($tmp[0],0,3);else $tmp[0]=substr($tmp[0],0,2)
+			 echo $tmp[0].'...@'.$tmp[1] ;?>
 			 را وارد کنید : 
 		 <?php } ?>
 		 </td>

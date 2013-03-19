@@ -2,22 +2,22 @@
 $warn=0;
 
 if(strlen($_POST['description'])<3){
-	$err->add('invalidData','site','warn') ;$warn++;
+	$err->add('invalidDataDesc','site','warn') ;$warn++;
 }
 if(strlen($_POST['price'])<3){
-	$err->add('invalidData','site','warn') ;$warn++;
+	$err->add('invalidDataPrice','site','warn') ;$warn++;
 }
 if(strlen($_POST['tel'])<7){
-	$err->add('invalidData','site','warn') ;$warn++;
+	$err->add('invalidDataTel','site','warn') ;$warn++;
 }
 if(strlen($_POST['name'])<6){
-	$err->add('invalidData','site','warn') ;$warn++;
+	$err->add('invalidDataName','site','warn') ;$warn++;
 }
 if(strlen($_POST['username'])<3){
-	$err->add('invalidData','site','warn') ;$warn++;
+	$err->add('invalidDataUsername','site','warn') ;$warn++;
 }
 if(isset($_POST['character_id']) && $_POST['character_id']=='-1'){
-	 $err->add('invalidData','site','warn') ;$warn++;
+	 $err->add('invalidDataHero','site','warn') ;$warn++;
 }
  
 if($warn!=0){

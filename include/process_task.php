@@ -57,7 +57,7 @@ $namespace = 'http://interfaces.core.sw.bps.com/';
 		// Check for a fault
 		if ($soapclient->fault) {
 			echo '<h2>Fault</h2><pre>';
-			print_r($result);
+			// print_r($result);
 			echo '</pre>';
 			die();
 		} 

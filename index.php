@@ -24,7 +24,7 @@ require "lib/sec.php";
 
         
         <![endif]-->
-        
+         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
     </head>
     
     <body>
@@ -34,7 +34,7 @@ require "lib/sec.php";
             <div class="header"> <!-- Defining the header section of the page with the appropriate tag -->
 
                 <h1>Ashena Game</h1>
-                <h3>Ashena world of warcraft game server</h3>
+                <h3>Ashenagame payment system version 2.2</h3>
                 
                 <div class="nav clear"> <!-- The nav link semantically marks your main site navigation -->
                     <ul>
@@ -106,10 +106,10 @@ require "lib/sec.php";
             
 		</div> <!-- Closing the #page section -->
         
-        <!-- 
+ 
         
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
-        <script type="text/javascript" src="js/jquery.scrollTo-1.4.2/jquery.scrollTo-min.js"></script>
+       
+              <!--  <script type="text/javascript" src="js/jquery.scrollTo-1.4.2/jquery.scrollTo-min.js"></script>
         <script type="text/javascript" src="js/script.js"></script> -->
     </body>
 </html>
