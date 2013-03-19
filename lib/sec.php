@@ -7,6 +7,7 @@ $config=new aConf();
 require ("lib/db.php");
 require ("lib/error.php");
 require ("lib/sms.php");
+require ("lib/mail.php");
 
  
 if(isset($_POST['user']) && isset($_POST['pass'])){

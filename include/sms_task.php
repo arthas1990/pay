@@ -1,6 +1,10 @@
 <?php
+if(isset($_REQUEST['type'])){
 if($_SESSION['other']['sms_wrong']==0 && $_SESSION['other']['sms_sended']==0)
-	$sms->send($Logged_User['tell'],$Logged_User['service_name']."\n".$Logged_User['securitycode']);
+	if($_REQUEST['type']=='sms')
+		$sms->send($Logged_User['tell'],$Logged_User['service_name']."\n".$Logged_User['securitycode']);
+	else
+		$mail->send_sec_code($Logged_User['email'],$Logged_User['service_name']."\n".$Logged_User['securitycode']);
  
 ?>
 <div class="tbl">
@@ -8,9 +12,17 @@ if($_SESSION['other']['sms_wrong']==0 && $_SESSION['other']['sms_sended']==0)
  
 <table width="800px" align="center">
 	<tr>
-		<td style="direction:rtl" >رمز ارسال شده به موبایلتان با دو شماره آخر 
-		 <?=substr($Logged_User['tell'],-2) ;?>
-		 را وارد کنید : </td>
+		<td style="direction:rtl" >
+		<?php if($_REQUEST['type']=='sms'){?>
+			رمز ارسال شده به موبایلتان با دو شماره آخر 
+			 <?=substr($Logged_User['tell'],-2) ;?>
+			 را وارد کنید : 
+		 <?php }else {?>
+			 رمز ارسال شده به ایمیلتان با سه کاراکتر اول
+			 <?=substr($Logged_User['email'],3) ;?>
+			 را وارد کنید : 
+		 <?php } ?>
+		 </td>
 		<td><input id="w3g_el_username" name="request_sms"  type="text">
         <label></label></td>
 	</tr>
@@ -29,3 +41,7 @@ if($_SESSION['other']['sms_wrong']==0 && $_SESSION['other']['sms_sended']==0)
 </table>
 </form>
 </div>
+<?php } 
+else{?>
+
+<?php } ?>
