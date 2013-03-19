@@ -1,4 +1,11 @@
 <?php @session_start();
+$task='misc';
+if(isset($_SESSION['other']['maintask']))
+	$task=$_SESSION['other']['maintask'];
+if(isset($_REQUEST['task']) ){ 
+$task=$_REQUEST['task'];
+}
+
 session_unset('user');
 session_unset('other');
 session_destroy();
@@ -71,7 +78,9 @@ session_destroy();
 					<form method="post" action="index.php">
 						<table border="0" width="400px" align="center">
 						<tr><td>نام کاربری</td><td><input name="user"></td></tr>
+						<?php if($task!='misc'){?>
 						<tr><td>رمز عبور</td><td><input name="pass" type="password"></td></tr>
+						<?php } ?>
 						<tr><td></td><td><input class="btn" value="ورود به حساب کاربری" type="submit"></td></tr>
 						</table>
 					</form>

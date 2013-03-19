@@ -68,7 +68,8 @@ public function update_bank_start($tscode,$refr,$res,$so,$sr,$id){
 	}
 }
 public function update_charge_start($id,$price,$user){ 
-	$q="insert into w3g_user_funds (id,username,money,payment_id) values (null,'$user','-$price','$id');";
+$cnfg=new aConf();
+	$q="insert into $cnfg->cnf_db_name.w3g_user_funds (id,username,money,payment_id) values (null,'$user','-$price','$id');";
 	$inserted=$this->insert($q);
 	if($inserted){
 		$q = "update  `w3g_payment`  set  `paid`='1', `done`='1' where id='$id'";	
@@ -84,13 +85,30 @@ public function update_charge_start($id,$price,$user){
 	}
 }
 public function get_user($usr,$pass){ 
-	$sec =$pass = sha1(strtoupper(trim($usr)) . ':' . strtoupper(trim($pass)));
-	$q = "SELECT accounts.*,sum(w3g_user_funds.money) as credit FROM `accounts` inner join w3g_user_funds on w3g_user_funds.username=accounts.username
-			WHERE accounts.`username` = '" . $usr . "'  AND accounts.`sha_pass_hash` = '" . $pass . "'";
-	
+	$cnfg=new aConf(); 
+	if(!mysql_connect($cnfg->cnf_authdb_host,$cnfg->cnf_authdb_uname,$cnfg->cnf_authdb_pass)){$err=new error();$err->add('db_conncet','db','err') ;}
+  
+
+	$q = "SELECT $cnfg->cnf_authdb_name.account.* FROM $cnfg->cnf_authdb_name.`account`
+			WHERE $cnfg->cnf_authdb_name.account.`username` = '" . $usr . "' ";
+	if($pass!="misc"){
+	$pass = sha1(strtoupper(trim($usr)) . ':' . strtoupper(trim($pass)));
+		$q .= " AND $cnfg->cnf_authdb_name.account.`sha_pass_hash` = '" . $pass . "'";
+		
+		}
+ 
 	$tmp=mysql_query($q); 
 	$tmp=mysql_fetch_assoc($tmp);
+	
+	if(!mysql_connect($cnfg->cnf_db_host,$cnfg->cnf_db_uname,$cnfg->cnf_db_pass)){$err=new error();$err->add('db_conncet','db','err') ;}
+	if(!mysql_select_db($cnfg->cnf_db_name)){$err=new error();$err->add('db_select_db','db','err') ;}
+	mysql_query("set names utf8;");
+	
+	
 	if(!empty($tmp['id'])){
+	 $tmp2=mysql_query("select sum($cnfg->cnf_db_name.w3g_user_funds.money) as credit from $cnfg->cnf_db_name.w3g_user_funds where $cnfg->cnf_db_name.w3g_user_funds.username='".$tmp['username']."'");
+	 $tmp2=mysql_fetch_assoc($tmp2);
+	 $tmp['credit']=$tmp2['credit'];
 		return $tmp;
 	}else{
 		$err=new error();$err->login('wrongUPass') ;
@@ -98,19 +116,30 @@ public function get_user($usr,$pass){
 }
 
 public function get_user_by_session($usr){
-	 if(!empty($usr['id'])){
-	$q = "SELECT accounts.*,sum(w3g_user_funds.money) as credit FROM `accounts` inner join w3g_user_funds on w3g_user_funds.username=accounts.username
-			WHERE accounts.`username` = '" . $usr['username'] . "' AND accounts.`id` = '" .  $usr['id']  . "'";
-	
-	$tmp=mysql_query($q);
+	 $cnfg=new aConf();
+	if(!mysql_connect($cnfg->cnf_authdb_host,$cnfg->cnf_authdb_uname,$cnfg->cnf_authdb_pass)){$err=new error();$err->add('db_conncet','db','err') ;}
+  
+
+	$q = "SELECT $cnfg->cnf_authdb_name.account.* FROM $cnfg->cnf_authdb_name.`account`
+			WHERE $cnfg->cnf_authdb_name.account.`username` = '" . $usr['username'] . "' and id ='".$usr['id']."'";
+	 
+ 
+	$tmp=mysql_query($q); 
 	$tmp=mysql_fetch_assoc($tmp);
+	
+	if(!mysql_connect($cnfg->cnf_db_host,$cnfg->cnf_db_uname,$cnfg->cnf_db_pass)){$err=new error();$err->add('db_conncet','db','err') ;}
+ 	mysql_query("set names utf8;");
+	
+	
 	if(!empty($tmp['id'])){
+	 $tmp2=mysql_query("select sum($cnfg->cnf_db_name.w3g_user_funds.money) as credit from $cnfg->cnf_db_name.w3g_user_funds where $cnfg->cnf_db_name.w3g_user_funds.username='".$tmp['username']."'");
+	 
+	 $tmp2=mysql_fetch_assoc($tmp2);
+	 $tmp['credit']=$tmp2['credit'];
 		return $tmp;
 	}else{
 		$err=new error();$err->login('wrongUPass') ;
 	}
-	}
-	$err=new error();$err->login('emptyUPass') ;
 }
 public function get_message_title($msg){
 	 
@@ -137,8 +166,8 @@ public function get_message($msg){
 	return false;
 }
 public function get_service_name($tsk){
-	 
-	$q = "SELECT * from w3g_payment_service_type
+	 $cnfg=new aConf();
+	$q = "SELECT * from $cnfg->cnf_db_name.w3g_payment_service_type
 			WHERE `action_name` = '" . $tsk . "'";
  
 	$tmp=mysql_query($q);
@@ -153,8 +182,8 @@ public function get_service_name($tsk){
 }
  
 public function get_service_cost($tsk){
-	 
-	$q = "SELECT * from w3g_payment_service_type
+	 $cnfg=new aConf();
+	$q = "SELECT * from $cnfg->cnf_db_name.w3g_payment_service_type
 			WHERE `action_name` = '" . $tsk . "'";
 	
 	$tmp=mysql_query($q);
@@ -208,8 +237,8 @@ public function get_hero_list($user_name){
  	mysql_query("set names utf8;");
 	
 	
-	$q = "SELECT ashenachar.characters.* FROM ashenachar.characters inner join ashenaauth.account on ashenachar.characters.account = ashenaauth.account.id
-	WHERE ashenaauth.account.username = '$user_name' ";
+	$q = "SELECT ashenachar.characters.* FROM ashenachar.characters inner join $cnfg->cnf_authdb_name.account on ashenachar.characters.account = $cnfg->cnf_authdb_name.account.id
+	WHERE $cnfg->cnf_authdb_name.account.username = '$user_name' ";
  $tmp=mysql_query($q);
  
  
@@ -247,8 +276,8 @@ public function service_need_sms($tsk){
 	return false;
 }
 public function service_need_hero($tsk){
-	 
-	$q = "SELECT * from w3g_payment_service_type
+	 $cnfg=new aConf();
+	$q = "SELECT * from $cnfg->cnf_db_name.w3g_payment_service_type
 			WHERE `action_name` = '" . $tsk . "'";
 	
 	$tmp=mysql_query($q);

@@ -6,7 +6,7 @@
 <table width="800px" align="center">
 	<tr>
 		<td  > نـــام اکانت </td>
-		<td><input id="w3g_el_username" name="username" class="note" readonly="" value="arthas1990" type="text">
+		<td><input id="w3g_el_username" name="username" class="note" readonly="" value="<?=$Logged_User['username'];?>" type="text">
         <label></label></td>
 	</tr><?php if($Logged_User['service_need_hero']):?>
 	<tr id="w3gj_herosWarpper">
@@ -45,7 +45,7 @@
 							<tr   style="">
 								<td > مبلغ موردنظر </td>
 								<td>
-								<input placeholder="" name="price"   type="text">
+								<input placeholder="" name="price" id="price"   type="text">
 								ریــال <label></label></td>
 							</tr>
 
@@ -60,12 +60,12 @@
 							</tr>
 							<tr   style="">
 								<td > روش پرداخت </td>
-								<td>
-								<select name="pay_type">
+								<td><?php if($Logged_User['credit']>0){?><script>if($('#price').val()<=<?=$Logged_User['credit']?>){$('#pay_type').append('<option value="charge">کسر از شارژ فعلی اکانت</option>'); }</script>	 <?php } ?>
+								<select name="pay_type" id="pay_type">
 								<option value="bank">پرداخت از طریق درگاه بانکی</option>
-								 
-								<option value="charge">کسر از شارژ فعلی اکانت</option>
-								 
+								
+								
+							
 								</select>
 								
 								</td>

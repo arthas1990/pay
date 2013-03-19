@@ -1,10 +1,10 @@
 <?php
 if(isset($_REQUEST['type'])){
 if($_SESSION['other']['sms_wrong']==0 && $_SESSION['other']['sms_sended']==0)
-	if($_REQUEST['type']=='sms')
+	if($_REQUEST['type']=='sms'){
 		$sms->send($Logged_User['tell'],$Logged_User['service_name']."\n".$Logged_User['securitycode']);
-	else
-		$mail->send_sec_code($Logged_User['email'],$Logged_User['service_name']."\n".$Logged_User['securitycode']);
+	}else{
+		$mail->send_sec_code($Logged_User['email'],$Logged_User['service_name']."\n".$Logged_User['securitycode']);}
  
 ?>
 <div class="tbl">
@@ -18,8 +18,10 @@ if($_SESSION['other']['sms_wrong']==0 && $_SESSION['other']['sms_sended']==0)
 			 <?=substr($Logged_User['tell'],-2) ;?>
 			 را وارد کنید : 
 		 <?php }else {?>
-			 رمز ارسال شده به ایمیلتان با سه کاراکتر اول
-			 <?=substr($Logged_User['email'],3) ;?>
+			 رمز ارسال شده به ایمیلتان با سه کاراکتر آخر
+			 <?php
+			 $tmp=explode('@',$Logged_User['email']);
+			 echo substr($tmp[0],-3) ;?>
 			 را وارد کنید : 
 		 <?php } ?>
 		 </td>
@@ -44,7 +46,7 @@ if($_SESSION['other']['sms_wrong']==0 && $_SESSION['other']['sms_sended']==0)
 <?php } 
 else{?>
 <div class="tbl">
-<form action="index.php">
+<form action="index.php" method="post">
 <input type="radio" name="type" value="sms" checked> ارسال کد امنیتی به موبایل<br>
 <input type="radio" name="type" value="mail" >  ارسال کد امنیتی به ایمیل<br>
  <input  name="step"   type="hidden" value="sms">

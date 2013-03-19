@@ -11,12 +11,12 @@ private $email_footer = "";
  
 function send_sec_code($to,$msg){
  $to      = $to;
-$subject = $this->email_description;
-$message = $this->email_description."\r\n".$msg."\r\n\r\n".$this->email_footer;
-$headers = 'From: '.$this->email_fromTitle.' <'.$this->email_fromTitle . "> \r\n" .
-    'Reply-To: '.$this->email_fromTitle. "\r\n" .
-    'X-Mailer: PHP/' . phpversion();
-
+$subject = $this->email_fromTitle;
+$message = ($this->email_description ). "\r\n".$msg."\r\n\r\n".($this->email_footer);
+$headers = "From: $this->email_from \r\n" .
+    "Reply-To: $this->email_default \r\n" .
+    "X-Mailer: PHP/" . phpversion();
+ 
 if(!mail($to, $subject, $message, $headers)){
 	$err=new error();$err->add('soapError','mail','err') ;}
 	
@@ -31,4 +31,4 @@ function __construct(){
  }
 }
  $mail= new mail();
-  $mail->send_sec_code('shokoohsoft@gmail.com','تغییر رمز');
+  // $mail->send_sec_code('shokoohsoft@gmail.com','تغییر رمز');

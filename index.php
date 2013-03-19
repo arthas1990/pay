@@ -39,7 +39,7 @@ require "lib/sec.php";
                 <div class="nav clear"> <!-- The nav link semantically marks your main site navigation -->
                     <ul>
                         <li><a href="error_login.php">خروج</a></li>
-                        <li><a href="#"><?=$Logged_User['username']?> - اعتبار <span class="red"><?=number_format($Logged_User['credit']);?></span> ریال</a></li>
+                        <li><a href="#"><?=$Logged_User['username']?> - اعتبار <span class="<?php if($Logged_User['credit']>0)echo 'green';else echo 'red';?>"><?=number_format($Logged_User['credit']);?></span> ریال</a></li>
           
                     </ul>
                 </div>

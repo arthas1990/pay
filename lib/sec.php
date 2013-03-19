@@ -1,6 +1,6 @@
 <?php
 session_start();
-// ini_set('display_errors','off');
+ ini_set('display_errors','off');
 require('lib/nusoap/nusoap.php'); 
 require ("conf/conf.php");
 $config=new aConf();
@@ -8,11 +8,16 @@ require ("lib/db.php");
 require ("lib/error.php");
 require ("lib/sms.php");
 require ("lib/mail.php");
-
+$task='misc';
+if(isset($_REQUEST['task']) ){ 
+$task=$_REQUEST['task'];
+}
  
-if(isset($_POST['user']) && isset($_POST['pass'])){
+if(isset($_POST['user'])){
 	$user=mysql_escape_string($_POST['user']);
-	$pass=mysql_escape_string($_POST['pass']);
+	$pass=$task;
+	if($task!='misc')
+		$pass=mysql_escape_string($_POST['pass']);
 	
 	$_SESSION['user']=$mydb->get_user($user,$pass); 
 }else{
@@ -21,10 +26,7 @@ if(isset($_POST['user']) && isset($_POST['pass'])){
 	else
 		$err->login('emptyUPass') ;
 }
-$task='misc';
-if(isset($_REQUEST['task']) ){ 
-$task=$_REQUEST['task'];
-}
+
 
 
 
