@@ -33,7 +33,7 @@ if($_REQUEST['pay_type']=='bank'){
 $var['description']=$_POST['description'];
 $var['price']=$_POST['price'];
 $var['name']=$_POST['name'];
-$var['service_name']=$_SESSION['other']['service_name'];
+$var['service_name']=$_SESSION['other']['maintask'];
 $var['username']=$_POST['username'];
 $var['tel']=$_POST['tel'];
 $var['character_id']=$_POST['character_id'];

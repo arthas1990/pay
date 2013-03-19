@@ -33,10 +33,10 @@ public function get_count($q){
 	$tmp=mysql_query($q);
 	return mysql_num_rows($tmp);
 }
-public function insert_bank_start($un,$ci,$sn,$pr,$name,$tel,$des){ 
-	$service_id=$this->get_service_id("$sn");
- 	$q = "INSERT INTO  `w3g_payment` (`id`, `username`, `character_id`, `service_type_id`, `code`, `time`, `paid`, `done`, `transaction_code`, `price`, `description`, `archived`, `deleted`, `RefId`, `ResCode`, `SaleOrderId`, `SaleReferenceId`, `step`, `sys_error`, `name`, `tel`, `custom_desc`, `use_charge`) VALUES 
-	(NULL, '$un', '$ci', '$service_id', '".time().rand(0,10000)."', now(), '1', '0', NULL, '$pr', NULL, '0', '0', '1', NULL, NULL, NULL, '0', NULL, '$name', '$tel', '$des', '0');";
+public function insert_bank_start($un,$ci,$sn,$pr,$name,$tel,$des){ $cnfg=new aConf();
+	$service_id=$this->get_service_id($sn);
+ 	$q = "INSERT INTO  $cnfg->cnf_db_name.`w3g_payment` (`id`, `username`, `character_id`, `service_type_id`, `code`, `time`, `paid`, `done`, `transaction_code`, `price`, `description`, `archived`, `deleted`, `RefId`, `ResCode`, `SaleOrderId`, `SaleReferenceId`, `step`, `sys_error`, `name`, `tel`, `custom_desc`, `use_charge`) VALUES 
+	(NULL, '$un', '$ci', '$service_id', '".time().rand(0,10000)."', now(), '1', '0', NULL, '$pr', NULL, '0', '0', '1', NULL, NULL, NULL, '3', NULL, '$name', '$tel', '$des', '0');";
 	
 	$inserted=$this->insert($q);
 	if($inserted){
@@ -45,10 +45,11 @@ public function insert_bank_start($un,$ci,$sn,$pr,$name,$tel,$des){
 		$err=new error();$err->add('manipulation','bank','err') ;
 	}
 }
-public function insert_charge_start($un,$ci,$sn,$pr,$name,$tel,$des){ 
-	$service_id=$this->get_service_id("$sn");
- 	$q = "INSERT INTO  `w3g_payment` (`id`, `username`, `character_id`, `service_type_id`, `code`, `time`, `paid`, `done`, `transaction_code`, `price`, `description`, `archived`, `deleted`, `RefId`, `ResCode`, `SaleOrderId`, `SaleReferenceId`, `step`, `sys_error`, `name`, `tel`, `custom_desc`, `use_charge`) VALUES 
-	(NULL, '$un', '$ci', '$service_id', '".time().rand(0,10000)."', now(), '1', '0', NULL, '$pr', NULL, '0', '0', '1', NULL, NULL, NULL, '0', NULL, '$name', '$tel', '$des', '1');";
+public function insert_charge_start($un,$ci,$sn,$pr,$name,$tel,$des){ $cnfg=new aConf();
+$cnfg=new aConf();
+	$service_id=$this->get_service_id($sn);
+ 	$q = "INSERT INTO  $cnfg->cnf_db_name.`w3g_payment` (`id`, `username`, `character_id`, `service_type_id`, `code`, `time`, `paid`, `done`, `transaction_code`, `price`, `description`, `archived`, `deleted`, `RefId`, `ResCode`, `SaleOrderId`, `SaleReferenceId`, `step`, `sys_error`, `name`, `tel`, `custom_desc`, `use_charge`) VALUES 
+	(NULL, '$un', '$ci', '$service_id', '".time().rand(0,10000)."', now(), '1', '0', NULL, '$pr', NULL, '0', '0', '1', NULL, NULL, NULL, '3', NULL, '$name', '$tel', '$des', '1');";
 	
 	$inserted=$this->insert($q);
 	if($inserted){
@@ -57,9 +58,9 @@ public function insert_charge_start($un,$ci,$sn,$pr,$name,$tel,$des){
 		$err=new error();$err->add('creditTransferFailed','bank','err') ;
 	}
 }
-public function update_bank_start($tscode,$refr,$res,$so,$sr,$id){ 
+public function update_bank_start($tscode,$refr,$res,$so,$sr,$id){ $cnfg=new aConf();
 	 
- 	$q = "update  `w3g_payment`  set  `paid`='1', `done`='1', `transaction_code`='$tscode', `RefId`='$ref', `ResCode`='$res', `SaleOrderId`='$so', `SaleReferenceId`='$sr'='$ref' where id='$id'";	
+ 	$q = "update  $cnfg->cnf_db_name.`w3g_payment`  set  `paid`='1', `done`='1', `transaction_code`='$tscode', `RefId`='$ref', `ResCode`='$res', `SaleOrderId`='$so', `SaleReferenceId`='$sr'='$ref' where id='$id'";	
 	$updated=$this->update($q);
 	if($updated){
 		return $updated;
@@ -72,7 +73,7 @@ $cnfg=new aConf();
 	$q="insert into $cnfg->cnf_db_name.w3g_user_funds (id,username,money,payment_id) values (null,'$user','-$price','$id');";
 	$inserted=$this->insert($q);
 	if($inserted){
-		$q = "update  `w3g_payment`  set  `paid`='1', `done`='1' where id='$id'";	
+		$q = "update  $cnfg->cnf_db_name.`w3g_payment`  set  `paid`='1', `done`='1' where id='$id'";	
 		$updated=$this->update($q);
 		if($updated){
 			return $updated;
@@ -196,10 +197,10 @@ public function get_service_cost($tsk){
 	return false;
 }
 public function get_service_id($sname){
-	 
-	$q = "SELECT * from w3g_payment_service_type
+	 $cnfg=new aConf(); 
+	$q = "SELECT * from $cnfg->cnf_db_name.w3g_payment_service_type
 			WHERE `action_name` = '" . $sname . "'";
-	
+ 
 	$tmp=mysql_query($q);
 	
 	if(mysql_num_rows($tmp)){
@@ -211,8 +212,8 @@ public function get_service_id($sname){
 }
 
 public function get_bank_orderid($id){
-	 
-	$q = "SELECT * from w3g_payment
+	 $cnfg=new aConf(); 
+	$q = "SELECT * from $cnfg->cnf_db_name.w3g_payment
 			WHERE `id` = '" . $id . "'";
 	
 	$tmp=mysql_query($q);
@@ -262,8 +263,8 @@ public function get_hero_list($user_name){
 	return false;
 }
 public function service_need_sms($tsk){
-	 
-	$q = "SELECT * from w3g_payment_service_type
+	 $cnfg=new aConf();
+	$q = "SELECT * from $cnfg->cnf_db_name.w3g_payment_service_type
 			WHERE `action_name` = '" . $tsk . "'";
 	
 	$tmp=mysql_query($q);
@@ -290,9 +291,9 @@ public function service_need_hero($tsk){
 	return false;
 }
 function bank_save_payment($username, $character_id, $description, $service_type, $token) {
- 
+ $cnfg=new aConf();
 		
-	$query = " INSERT INTO `w3g_payment` (
+	$query = " INSERT INTO $cnfg->cnf_db_name.`w3g_payment` (
 `id` ,
 `username` ,
 `character_id` ,
