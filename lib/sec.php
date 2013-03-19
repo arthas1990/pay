@@ -1,6 +1,6 @@
 <?php
 session_start();
-ini_set('display_errors','off');
+// ini_set('display_errors','off');
 require('lib/nusoap/nusoap.php'); 
 require ("conf/conf.php");
 $config=new aConf();

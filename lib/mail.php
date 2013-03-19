@@ -17,8 +17,8 @@ $headers = 'From: '.$this->email_fromTitle.' <'.$this->email_fromTitle . "> \r\n
     'Reply-To: '.$this->email_fromTitle. "\r\n" .
     'X-Mailer: PHP/' . phpversion();
 
-if(!mail($to, $subject, $message, $headers))
-	$err=new error();$err->add('soapError','mail','err') ;
+if(!mail($to, $subject, $message, $headers)){
+	$err=new error();$err->add('soapError','mail','err') ;}
 	
 } 
 function __construct(){
