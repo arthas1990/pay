@@ -1,4 +1,8 @@
-<?php if($_SESSION['other']['pay_type']=='bank'){?>
+<?php 
+$bank_vars=json_decode($_SESSION['other']['vars_before_bank']);
+
+if($bank_vars->price>0)
+if($_SESSION['other']['pay_type']=='bank'){?>
 <form method="post" action="?send">
 <div>
  در حال انتقال به درگاه بانک ...
@@ -17,7 +21,7 @@ $namespace = 'http://interfaces.core.sw.bps.com/';
  $soapclient = new nusoap_client('https://pgws.bpm.bankmellat.ir/pgwchannel/services/pgw?wsdl', 'wsdl');
 
 	///////////////// PAY REQUEST
-		$bank_vars=json_decode($_SESSION['other']['vars_before_bank']);
+		
 	 
 		$terminalId = $config->cnf_bank_terminal_id;
 		$userName = $config->cnf_bank_username;
@@ -119,6 +123,19 @@ $namespace = 'http://interfaces.core.sw.bps.com/';
 		echo 'انتقال برای کسر از شارژ... <meta http-equiv="refresh" content="0;URL='.$conf->cnf_base_url.'index.php?step=done" />';
  
  }
-	?>
+ 
+ if($bank_vars->price==0)
+switch( $bank_vars->service_name ){
+case 'password':
+{
+$mydb->user_change_password($bank_vars->user_id,$bank_vars->username,$bank_vars->new_pass);
+echo 'انتقال برای انجام تراکنش... <meta http-equiv="refresh" content="0;URL='.$conf->cnf_base_url.'index.php?step=done" />';
+break;
+}
+
+
+
+}
+ ?>
 	
 	

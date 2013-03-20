@@ -8,7 +8,10 @@ require ("lib/db.php");
 require ("lib/error.php");
 require ("lib/sms.php");
 require ("lib/mail.php");
-$task='misc';
+if(!isset($_SESSION['other']['maintask']))
+	$task='misc';
+else
+	$task=$_SESSION['other']['maintask'];
 if(isset($_REQUEST['task']) ){ 
 $task=$_REQUEST['task'];
 }
@@ -16,7 +19,7 @@ $task=$_REQUEST['task'];
 if(isset($_POST['user'])){
 	$user=mysql_escape_string($_POST['user']);
 	$pass=$task;
-	if($task!='misc')
+	if($task!='misc' && $task!='password')
 		$pass=mysql_escape_string($_POST['pass']);
 	
 	$_SESSION['user']=$mydb->get_user($user,$pass); 
@@ -52,6 +55,11 @@ if(isset($_REQUEST['step']) && !empty($_REQUEST['step']) )
 	 
 	if(isset($_POST['price']))$service_cost=$_POST['price'];
 	break;}
+	case 'password':{
+	$_SESSION['other']['maintask']=$task;
+	 
+	$service_cost=0;
+	break;}
 	
 	
 	
@@ -66,8 +74,8 @@ if($_SESSION['other']['step']=='process' && $_SESSION['other']['service_need_sms
  
  
  
- 
-$service_cost=$mydb->get_service_cost($_SESSION['other']['maintask']);
+ if(!isset($service_cost))
+	$service_cost=$mydb->get_service_cost($_SESSION['other']['maintask']);
 if(!isset($_SESSION['other']['sms_wrong']))$_SESSION['other']['sms_wrong']=0;
 $_SESSION['other']['pay_type']=$pay_type;
 $_SESSION['other']['service_cost']=$service_cost;

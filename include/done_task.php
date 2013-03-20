@@ -1,4 +1,8 @@
 <?php 
+$bank_vars=json_decode($_SESSION['other']['vars_before_bank']);
+
+if($bank_vars->price>0){
+
 if($_SESSION['other']['pay_type']=='bank'){
  $resultStr=$_POST['ResCode'];
 if($_POST['ResCode']=='0'){
@@ -9,7 +13,6 @@ $namespace = 'http://interfaces.core.sw.bps.com/';
  $soapclient = new nusoap_client('https://pgws.bpm.bankmellat.ir/pgwchannel/services/pgw?wsdl', 'wsdl');
 
 	///////////////// PAY REQUEST
-		$bank_vars=json_decode($_SESSION['other']['vars_before_bank']);
 	 
 		$terminalId = $config->cnf_bank_terminal_id;
 		$userName = $config->cnf_bank_username;
@@ -134,10 +137,18 @@ if($tmp=$mydb->update_charge_start($_SESSION['other']['bID'],$bank_vars->price,$
 echo '<div class="note">تراکنش با موفقیت انجام شد</div>';
 else
 echo '<div class="err">خطا در کسر شارژ</div>';
-
-
+}
 }
 
+
+if($bank_vars->price==0)
+switch( $bank_vars->service_name ){
+case 'password':
+{
+ 
+echo '<div class="note">تراکنش با موفقیت انجام شد</div>';break;
+}
+}
 session_unset('user');
 session_unset('other');
 session_destroy();?>

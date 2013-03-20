@@ -75,7 +75,7 @@ require "lib/sec.php";
 						foreach($err->note_list as $row)
 							if(!empty($row))
 								echo '<div class="note">'.$row.'</div>';
-				
+				 
 					 include "include/".$Logged_User['step']."_task.php";
 					  
 					?>

@@ -8,7 +8,7 @@ if($_SESSION['other']['sms_wrong']==0 && $_SESSION['other']['sms_sended']==0)
  
 ?>
 <div class="tbl">
-<form method="post">
+<form method="post" action="index.php?task=<?php echo $Logged_User['maintask'];?>">
  
 <table width="800px" align="center">
 	<tr>
@@ -21,8 +21,8 @@ if($_SESSION['other']['sms_wrong']==0 && $_SESSION['other']['sms_sended']==0)
 			 رمز ارسال شده به ایمیل 
 			 <?php
 			 $tmp=explode('@',$Logged_User['email']);
-			 if($tmp[0]<5)	$tmp[0]=substr($tmp[0],0,3);else $tmp[0]=substr($tmp[0],0,2)
-			 echo $tmp[0].'...@'.$tmp[1] ;?>
+			 if($tmp[0]<5)	$tmp[0]=substr($tmp[0],0,3);else $tmp[0]=substr($tmp[0],0,2);
+			 echo $tmp[0] . '...@' . $tmp[1] ;?>
 			 را وارد کنید : 
 		 <?php } ?>
 		 </td>

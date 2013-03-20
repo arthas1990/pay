@@ -42,7 +42,7 @@ session_destroy();
             <div class="header"> <!-- Defining the header section of the page with the appropriate tag -->
 
                 <h1>Ashena Game</h1>
-                <h3>Ashena world of warcraft game server</h3>
+                <h3>Ashenagame payment system version 2.2</h3>
                 
             
             </div>
@@ -75,10 +75,10 @@ session_destroy();
 								echo '<div class="note">'.$row.'</div>';
 					}
 					?>
-					<form method="post" action="index.php">
+					<form method="post" action="index.php?task=<?=$task?>">
 						<table border="0" width="400px" align="center">
 						<tr><td>نام کاربری</td><td><input name="user"></td></tr>
-						<?php if($task!='misc'){?>
+						<?php if($task!='misc' && $task!='password' ){?>
 						<tr><td>رمز عبور</td><td><input name="pass" type="password"></td></tr>
 						<?php } ?>
 						<tr><td></td><td><input class="btn" value="ورود به حساب کاربری" type="submit"></td></tr>
