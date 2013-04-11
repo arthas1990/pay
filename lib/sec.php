@@ -8,6 +8,7 @@ require ("lib/db.php");
 require ("lib/error.php");
 require ("lib/sms.php");
 require ("lib/mail.php");
+require ("lib/discount.php");
 if(!isset($_SESSION['other']['maintask']))
 	$task='misc';
 else
@@ -19,7 +20,7 @@ $task=$_REQUEST['task'];
 if(isset($_POST['user'])){
 	$user=mysql_escape_string($_POST['user']);
 	$pass=$task;
-	if($task!='misc' && $task!='password')
+	if($task!='misc' && $task!='password' && $task!='backhero' && $task!='lockpass')
 		$pass=mysql_escape_string($_POST['pass']);
 	
 	$_SESSION['user']=$mydb->get_user($user,$pass); 
@@ -30,7 +31,7 @@ if(isset($_POST['user'])){
 		$err->login('emptyUPass') ;
 }
 
-
+ 
 
 
 if(isset($_REQUEST['verify']))
@@ -46,8 +47,6 @@ if(isset($_REQUEST['step']) && !empty($_REQUEST['step']) )
 			$_SESSION['other']['step']=$task;}
 	
  
-
-
  
 	switch($task){
 	case 'misc':{
@@ -60,15 +59,23 @@ if(isset($_REQUEST['step']) && !empty($_REQUEST['step']) )
 	 
 	$service_cost=0;
 	break;}
-	
-	
+	case 'backhero':{
+	$_SESSION['other']['maintask']=$task;
+	 
+ 	break;}
+	case 'lockpass':{
+	$_SESSION['other']['maintask']=$task;
+	 
+ 	break;}
 	
 	
 	}
+	
+	 
 $pay_type='bank';	
 if(isset($_SESSION['other']['pay_type']))$pay_type=$_SESSION['other']['pay_type'];
 if(isset($_POST['pay_type']))$pay_type=$_POST['pay_type'];
- 
+
 if($_SESSION['other']['step']=='process' && $_SESSION['other']['service_need_sms'] && (!isset($_SESSION['other']['sms_confirmed']) || $_SESSION['other']['sms_confirmed']=='0'))
 	$err->login('wrongSecurityCode') ;
  
@@ -76,6 +83,7 @@ if($_SESSION['other']['step']=='process' && $_SESSION['other']['service_need_sms
  
  if(!isset($service_cost))
 	$service_cost=$mydb->get_service_cost($_SESSION['other']['maintask']);
+
 if(!isset($_SESSION['other']['sms_wrong']))$_SESSION['other']['sms_wrong']=0;
 $_SESSION['other']['pay_type']=$pay_type;
 $_SESSION['other']['service_cost']=$service_cost;
@@ -97,7 +105,8 @@ $_SESSION['user']['heros']=$mydb->get_hero_list($_SESSION['user']['username']);
 
 
 
-
+if($pay_type=='charge' && intval($_SESSION['user']['service_cost']) > intval($_SESSION['user']['credit']))
+	$err->login('invalidDataPayType') ;
 
 $Logged_User=$_SESSION['user'];
  

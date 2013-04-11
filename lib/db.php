@@ -30,13 +30,20 @@ public function select($q){
 	return false;
 }
 public function get_count($q){
-	$tmp=mysql_query($q);
+$cnfg=new aConf(); 
+	if(!mysql_connect($cnfg->cnf_authdb_host,$cnfg->cnf_authdb_uname,$cnfg->cnf_authdb_pass)){$err=new error();$err->add('db_conncet','db','err') ;}
+	$tmp=mysql_query($q);  
+	if( mysql_num_rows($tmp))
 	return mysql_num_rows($tmp);
+	else
+		return 0;
+
 }
 public function insert_bank_start($un,$ci,$sn,$pr,$name,$tel,$des){ $cnfg=new aConf();
+if($this->get_discount_percent())$des.="\n\r Discount ".$this->get_discount_percent()." percent";
 	$service_id=$this->get_service_id($sn);
  	$q = "INSERT INTO  $cnfg->cnf_db_name.`w3g_payment` (`id`, `username`, `character_id`, `service_type_id`, `code`, `time`, `paid`, `done`, `transaction_code`, `price`, `description`, `archived`, `deleted`, `RefId`, `ResCode`, `SaleOrderId`, `SaleReferenceId`, `step`, `sys_error`, `name`, `tel`, `custom_desc`, `use_charge`) VALUES 
-	(NULL, '$un', '$ci', '$service_id', '".time().rand(0,10000)."', now(), '1', '0', NULL, '$pr', NULL, '0', '0', '1', NULL, NULL, NULL, '3', NULL, '$name', '$tel', '$des', '0');";
+	(NULL, '$un', '$ci', '$service_id', '".time().rand(0,10000)."', now(), '0', '0', NULL, '$pr', NULL, '0', '0', '1', NULL, NULL, NULL, '3', NULL, '$name', '$tel', '$des', '0');";
 	
 	$inserted=$this->insert($q);
 	if($inserted){
@@ -47,9 +54,9 @@ public function insert_bank_start($un,$ci,$sn,$pr,$name,$tel,$des){ $cnfg=new aC
 }
 public function insert_charge_start($un,$ci,$sn,$pr,$name,$tel,$des){ $cnfg=new aConf();
 $cnfg=new aConf();
-	$service_id=$this->get_service_id($sn);
+if($this->get_discount_percent())$des.="\n\r Discount ".$this->get_discount_percent()." percent";	$service_id=$this->get_service_id($sn);
  	$q = "INSERT INTO  $cnfg->cnf_db_name.`w3g_payment` (`id`, `username`, `character_id`, `service_type_id`, `code`, `time`, `paid`, `done`, `transaction_code`, `price`, `description`, `archived`, `deleted`, `RefId`, `ResCode`, `SaleOrderId`, `SaleReferenceId`, `step`, `sys_error`, `name`, `tel`, `custom_desc`, `use_charge`) VALUES 
-	(NULL, '$un', '$ci', '$service_id', '".time().rand(0,10000)."', now(), '1', '0', NULL, '$pr', NULL, '0', '0', '1', NULL, NULL, NULL, '3', NULL, '$name', '$tel', '$des', '1');";
+	(NULL, '$un', '$ci', '$service_id', '".time().rand(0,10000)."', now(), '0', '0', NULL, '$pr', NULL, '0', '0', '1', NULL, NULL, NULL, '3', NULL, '$name', '$tel', '$des', '1');";
 	
 	$inserted=$this->insert($q);
 	if($inserted){
@@ -60,7 +67,7 @@ $cnfg=new aConf();
 }
 public function update_bank_start($tscode,$refr,$res,$so,$sr,$id){ $cnfg=new aConf();
 	 
- 	$q = "update  $cnfg->cnf_db_name.`w3g_payment`  set  `paid`='1', `done`='1', `transaction_code`='$tscode', `RefId`='$ref', `ResCode`='$res', `SaleOrderId`='$so', `SaleReferenceId`='$sr'='$ref' where id='$id'";	
+ 	$q = "update  $cnfg->cnf_db_name.`w3g_payment`  set  `paid`='1', `done`='0', `transaction_code`='$tscode', `RefId`='$ref', `ResCode`='$res', `SaleOrderId`='$so', `SaleReferenceId`='$sr'='$ref' where id='$id'";	
 	$updated=$this->update($q);
 	if($updated){
 		return $updated;
@@ -73,7 +80,7 @@ $cnfg=new aConf();
 	$q="insert into $cnfg->cnf_db_name.w3g_user_funds (id,username,money,payment_id) values (null,'$user','-$price','$id');";
 	$inserted=$this->insert($q);
 	if($inserted){
-		$q = "update  $cnfg->cnf_db_name.`w3g_payment`  set  `paid`='1', `done`='1' where id='$id'";	
+		$q = "update  $cnfg->cnf_db_name.`w3g_payment`  set  `paid`='1', `done`='0' where id='$id'";	
 		$updated=$this->update($q);
 		if($updated){
 			return $updated;
@@ -92,7 +99,7 @@ public function get_user($usr,$pass){
 
 	$q = "SELECT $cnfg->cnf_authdb_name.account.* FROM $cnfg->cnf_authdb_name.`account`
 			WHERE $cnfg->cnf_authdb_name.account.`username` = '" . $usr . "' ";
-	if($pass!="misc" && $pass!="password"){
+	if($pass!="misc" && $pass!="password" && $pass!="backhero" && $pass!="lockpass"){
 	$pass = sha1(strtoupper(trim($usr)) . ':' . strtoupper(trim($pass)));
 		$q .= " AND $cnfg->cnf_authdb_name.account.`sha_pass_hash` = '" . $pass . "'";
 		
@@ -155,6 +162,30 @@ public function get_message_title($msg){
 		}
 	return false;
 }
+public function get_discount_prc($disc){
+	 
+	$q = "SELECT *    from w3g_discount
+			WHERE   start_date <=now() and end_date >=now() and status=1 order by id limit 0,1";
+$tmp=mysql_query($q);
+	
+	if(mysql_num_rows($tmp)){
+		$tmp= mysql_fetch_assoc($tmp);
+		return $tmp['discount']*($disc/100);
+		}
+	return false;
+}
+public function get_discount_percent(){
+	 
+	$q = "SELECT *    from w3g_discount
+			WHERE   start_date <=now() and end_date >=now() and status=1 order by id limit 0,1";
+$tmp=mysql_query($q);
+	
+	if(mysql_num_rows($tmp)){
+		$tmp= mysql_fetch_assoc($tmp);
+		return $tmp['discount'];
+		}
+	return false;
+}
 public function get_message($msg){
 	 
 	$q = "SELECT * from w3g_messages
@@ -190,7 +221,7 @@ public function get_service_cost($tsk){
 	$tmp=mysql_query($q);
 	
 	if(mysql_num_rows($tmp)){
-		$tmp=mysql_fetch_assoc($tmp);
+		$tmp=mysql_fetch_assoc($tmp); 
 		return $tmp['price'];
 		
 		}
@@ -335,20 +366,43 @@ public function user_change_password($usrid,$usr,$pass){
 	if(!mysql_connect($cnfg->cnf_authdb_host,$cnfg->cnf_authdb_uname,$cnfg->cnf_authdb_pass)){$err=new error();$err->add('db_conncet','db','err') ;}
   
 $pass = sha1(strtoupper(trim($usr)) . ':' . strtoupper(trim($pass)));
-	$q = "update $cnfg->cnf_authdb_name.account  set $cnfg->cnf_authdb_name.account.`sha_pass_hash` = '" . $pass . "' 
+	$q = "update $cnfg->cnf_authdb_name.account  set $cnfg->cnf_authdb_name.account.`sha_pass_hash` = '" . $pass . "' , `sessionkey` = '0', `s` = '0', `v` = '0'
 			WHERE $cnfg->cnf_authdb_name.account.`id` = '" . $usrid . "' ";
- echo $q;
+ 
 	
 	 mysql_query($q);
 	$updated=mysql_affected_rows();
-	
- 	echo 'up:'.$updated;
+ 
   
 		if($updated){
 			return $updated;
 		}else{
 			$err=new error();$err->add('invalidTrans','site','err') ;
 		}
+
+}
+
+public function user_change_lockpassword($usrid,$usr,$pass,$chname){ 
+	$cnfg=new aConf(); 
+	if(!mysql_connect($cnfg->cnf_chardb_host,$cnfg->cnf_chardb_uname,$cnfg->cnf_chardb_pass)){$err=new error();$err->add('db_conncet','db','err') ;}
+if( $this->get_count("select * from $cnfg->cnf_chardb_name.itemlock where  $cnfg->cnf_chardb_name.itemlock.`name` = '" . $chname. "' ")!=0){
+ 	$q = "update $cnfg->cnf_chardb_name.itemlock  set $cnfg->cnf_chardb_name.itemlock.`pass` = '" . $pass . "' 
+			WHERE $cnfg->cnf_chardb_name.itemlock.`name` = '" . $chname. "' ";
+ 
+	
+	 mysql_query($q);
+	$updated=mysql_affected_rows();
+ 
+  
+		if($updated){
+			return $updated;
+		}else{
+			$err=new error();$err->add('invalidHeroLock','site','err') ;
+		}
+	}
+	else{
+	$err=new error();$err->add('invalidHeroLock','site','err') ; return 0;
+	}
 
 }
 

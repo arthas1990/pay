@@ -1,7 +1,10 @@
 <?php 
-$bank_vars=json_decode($_SESSION['other']['vars_before_bank']);
+if($_SESSION['other']['maintask']=='misc'){ 
+discount();
 
-if($bank_vars->price>0)
+}
+$bank_vars=json_decode($_SESSION['other']['vars_before_bank']);
+if($bank_vars->price>0){
 if($_SESSION['other']['pay_type']=='bank'){?>
 <form method="post" action="?send">
 <div>
@@ -123,12 +126,16 @@ $namespace = 'http://interfaces.core.sw.bps.com/';
 		echo 'انتقال برای کسر از شارژ... <meta http-equiv="refresh" content="0;URL='.$conf->cnf_base_url.'index.php?step=done" />';
  
  }
- 
+ }
  if($bank_vars->price==0)
 switch( $bank_vars->service_name ){
 case 'password':
 {
-$mydb->user_change_password($bank_vars->user_id,$bank_vars->username,$bank_vars->new_pass);
+echo 'انتقال برای انجام تراکنش... <meta http-equiv="refresh" content="0;URL='.$conf->cnf_base_url.'index.php?step=done" />';
+break;
+}
+case 'lockpass':
+{
 echo 'انتقال برای انجام تراکنش... <meta http-equiv="refresh" content="0;URL='.$conf->cnf_base_url.'index.php?step=done" />';
 break;
 }

@@ -17,7 +17,7 @@ $_REQUEST['step']=$_SESSION['other']['step'];
 $var['service_name']=$_SESSION['other']['maintask'];
 $var['username']=$_POST['username'];
 $var['new_pass']=$_POST['new_pass'];
- $var['price']=0;
+$var['price']=0;
 $var['user_id']=$_SESSION['user']['id'];
 $_SESSION['other']['vars_before_bank']=json_encode($var);	
 }

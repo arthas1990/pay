@@ -78,7 +78,7 @@ session_destroy();
 					<form method="post" action="index.php?task=<?=$task?>">
 						<table border="0" width="400px" align="center">
 						<tr><td>نام کاربری</td><td><input name="user"></td></tr>
-						<?php if($task!='misc' && $task!='password' ){?>
+						<?php if($task!='misc' && $task!='password'  && $task!='backhero' && $task!='lockpass' ){?>
 						<tr><td>رمز عبور</td><td><input name="pass" type="password"></td></tr>
 						<?php } ?>
 						<tr><td></td><td><input class="btn" value="ورود به حساب کاربری" type="submit"></td></tr>

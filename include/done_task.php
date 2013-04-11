@@ -2,7 +2,6 @@
 $bank_vars=json_decode($_SESSION['other']['vars_before_bank']);
 
 if($bank_vars->price>0){
-
 if($_SESSION['other']['pay_type']=='bank'){
  $resultStr=$_POST['ResCode'];
 if($_POST['ResCode']=='0'){
@@ -94,7 +93,7 @@ $namespace = 'http://interfaces.core.sw.bps.com/';
 				die();
 			} 
 			else {
-			print_r( $resultStr);
+			 
 				 if($resultStr['return']=='0'){
 				  $tmp=$mydb->update_bank_start($_POST['CardHolderInfo'],$_POST['RefId'],$_POST['ResCode'],$_POST['SaleOrderId'],$_POST['SaleReferenceId'],$_SESSION['other']['bID']);
 				}else{
@@ -145,8 +144,15 @@ if($bank_vars->price==0)
 switch( $bank_vars->service_name ){
 case 'password':
 {
- 
-echo '<div class="note">تراکنش با موفقیت انجام شد</div>';break;
+ $mydb->user_change_password($bank_vars->user_id,$bank_vars->username,$bank_vars->new_pass);
+
+echo '<div class="note">رمز عبور با موفقیت تغییر کرد</div>';break;
+}
+case 'lockpass':
+{
+ $mydb->user_change_lockpassword($bank_vars->user_id,$bank_vars->username,$bank_vars->newlock,$bank_vars->chname);
+
+echo '<div class="note">رمز عبور Lock  با موفقیت تغییر کرد</div>';break;
 }
 }
 session_unset('user');

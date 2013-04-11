@@ -25,6 +25,15 @@ require "lib/sec.php";
         
         <![endif]-->
          <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<link  rel="stylesheet" type="text/css" href="js/calender/skins/aqua/theme.css" />
+        <script type="text/javascript" src="js/calender/jalali.js"></script>
+		<script type="text/javascript" src="js/calender/calendar.js"></script>
+        <script type="text/javascript" src="js/calender/calendar-setup.js"></script>
+        <script type="text/javascript" src="js/calender/lang/calendar-fa.js"></script>
+        <script type="text/javascript" src="js/date.js"></script>
+		 
+		 
+		 
     </head>
     
     <body>
